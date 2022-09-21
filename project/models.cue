@@ -2,7 +2,7 @@ package main
 
 import "github.com/yoktobit/yoktocue/schema"
 
-Model: schema.#Datamodel & {
+DemoModel: schema.#Datamodel & {
     Name: "DemoModel"
     Models: {
         Person: {
@@ -24,7 +24,7 @@ Model: schema.#Datamodel & {
     } 
 }
 
-CreatePersonInput: Model.Models.Person
+CreatePersonInput: DemoModel.Models.Person
 CreatePersonOutput: schema.#Model & {
 	Name: "CreatePersonOutput"
     Fields: {
@@ -32,6 +32,6 @@ CreatePersonOutput: schema.#Model & {
 			Label: "ID"
 			Type: "int64"
 		}
-		Model.Models.Person.Fields
+		DemoModel.Models.Person.Fields
 	}
 }

@@ -1,8 +1,7 @@
 package persistence
-
 type PersonRecord struct {
-	Id       int64
-	Titel    string
-	Vorname  string
+	Id int64
 	Nachname string
+	Titel string
+	Vorname string
 }

@@ -1,11 +1,14 @@
 package main
 
-import gen2 "github.com/hofstadter-io/hof/schema/gen"
+import "github.com/hofstadter-io/hof/schema/gen"
 import "github.com/yoktobit/yoktocue/schema"
 import "strings"
 
-#CustomRouterGenerator: gen2.#Generator & {
+#Generator: gen.#Generator & {
 	Name:   =~"^Demo"
+}
+
+#RouterGenerator: #Generator & {
 	Routes: #Routes
 }
 
@@ -14,39 +17,23 @@ import "strings"
     ...
 }
 
-//Generator: #CustomRouterGenerator & {
-//	@gen(router)
-//	Name: "DemoGenerator"
-//	Routes: {
-//		MyRoutes
-//	}
-//    PackageName: "github.com/yoktobit/yoktocue"
-//}
-
-Generator2: #CustomRouterGenerator & {
-	@gen(router2)
-    Name: "DemoGenerator2"
-    MyRoutes=Routes: {
-	    "/demo/person": {
-            Name:   "CreatePerson"
-            Method: "post"
-            Input:  CreatePersonInput
-            Output: CreatePersonOutput
-	    }
-    }
+RouterGenerator: #RouterGenerator & {
+	@gen(router)
+    Name: "DemoRouterGenerator"
+    MyRoutes=Routes: DemoRoutes
     Out: [{
 		In: {
 			Routes: MyRoutes
 		}
 		TemplatePath: "router/router_types.go"
-		Filepath:     "routercc/router_types.go"
+		Filepath:     "router/router_types.go"
 	},
     {
 		In: {
 			Routes: MyRoutes
 		}
 		TemplatePath: "router/router.go"
-		Filepath:     "routercc/router.go"
+		Filepath:     "router/router.go"
 	},
     for _, R in MyRoutes {
         In: {
@@ -57,8 +44,30 @@ Generator2: #CustomRouterGenerator & {
         }
         _lowerName: strings.ToLower(R.Name)
         TemplatePath: "router/handle_route.go"
-        Filepath:     "routercc/handle_\(_lowerName).go"
+        Filepath:     "router/handle_\(_lowerName).go"
     },
+    ]
+    PackageName: ""
+}
+
+PersistenceGenerator: #Generator & {
+    @gen(persistence)
+    Name: "DemoPersistenceGenerator"
+    Out: [
+        {
+            In: {
+                Models: DemoModel.Models
+            }
+            TemplatePath: "persistence/persistence_model.go"
+            Filepath: "persistence/persistence_model.go"
+        },
+        {
+            In: {
+                Models: DemoModel.Models
+            }
+            TemplatePath: "persistence/persistence_service.go"
+            Filepath: "persistence/persistence_service.go"
+        }
     ]
     PackageName: ""
 }
