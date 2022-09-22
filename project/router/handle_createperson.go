@@ -37,3 +37,4 @@ func handleCreatePerson(c echo.Context) error {
 	createPersonOutput.Nachname = person.Nachname
 	return c.JSON(http.StatusCreated, createPersonOutput)
 }
+

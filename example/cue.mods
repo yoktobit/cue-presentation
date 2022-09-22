@@ -1,0 +1,8 @@
+module github.com/yoktobit/cue-presentation/example
+
+cue v0.4.3
+
+require (
+    "github.com/hofstadter-io/hof" v0.6.7-rc.2
+    "github.com/yoktobit/yoktocue" v0.0.17
+)

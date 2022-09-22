@@ -7,3 +7,4 @@ func SetupRouter(e *echo.Echo) {
 	e.POST("/demo/person/create", handleCreatePerson)
 
 }
+

@@ -1,4 +1,4 @@
-package main
+package app
 
 DemoRoutes: {
     "/demo/person/create": {

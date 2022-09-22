@@ -1,5 +1,4 @@
 package persistence
-
 type CreatePerson interface {
 	CreatePerson(PersonRecord) (PersonRecord, error)
 }
@@ -21,3 +20,4 @@ func NewPersonRepository() (PersonRepository, error) {
 	personRepository := personRepository{}
 	return personRepository, nil
 }
+
