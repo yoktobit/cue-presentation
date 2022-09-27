@@ -35,5 +35,6 @@ func handle{{.Route.Name}}(c echo.Context) error {
 	{{camel .Route.Name}}Output.Titel = person.Titel
 	{{camel .Route.Name}}Output.Vorname = person.Vorname
 	{{camel .Route.Name}}Output.Nachname = person.Nachname
+	c.Logger().Info("Datensatz angelegt")
 	return c.JSON(http.StatusCreated, {{camel .Route.Name}}Output)
 }

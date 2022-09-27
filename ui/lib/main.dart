@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test1/pages/willkommen/page_sent.dart';
+import 'package:test1/pages/sent/page_sent.dart';
 import 'package:test1/services/sending_service.dart';
-import 'pages/willkommen/page_willkommen.dart';
+import 'package:test1/pages/willkommen/page_willkommen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,4 +27,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

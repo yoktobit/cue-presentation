@@ -25,9 +25,10 @@ class _WillkommenPageState extends State<WillkommenPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Willkommen'),
+        title: const Text('Willkommen'),
       ),
       body: FormBuilder(
+        key: _formKey,
         child: Stepper(
           onStepContinue: stepContinue,
           currentStep: _step,
@@ -50,7 +51,7 @@ class _WillkommenPageState extends State<WillkommenPage> {
         _step++;
       });
     } else {
-      final data = {'titel': _formKey.currentState?.fields['titel']?.transformedValue,'vorname': _formKey.currentState?.fields['vorname']?.transformedValue,'nachname': _formKey.currentState?.fields['nachname']?.transformedValue,'statichtmlfield': _formKey.currentState?.fields['statichtmlfield']?.transformedValue,};
+      final data = {'Titel': _formKey.currentState?.fields['titel']?.transformedValue,'Vorname': _formKey.currentState?.fields['vorname']?.transformedValue,'Nachname': _formKey.currentState?.fields['nachname']?.transformedValue,'StaticHtmlField': _formKey.currentState?.fields['statichtmlfield']?.transformedValue,};
       final json = jsonEncode(data);
       widget.sendingService.send("/demo/person/create", json);
       Navigator.pushNamed(context, '/sent');

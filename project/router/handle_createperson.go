@@ -35,6 +35,6 @@ func handleCreatePerson(c echo.Context) error {
 	createPersonOutput.Titel = person.Titel
 	createPersonOutput.Vorname = person.Vorname
 	createPersonOutput.Nachname = person.Nachname
+	c.Logger().Error("Datensatz angelegt")
 	return c.JSON(http.StatusCreated, createPersonOutput)
 }
-

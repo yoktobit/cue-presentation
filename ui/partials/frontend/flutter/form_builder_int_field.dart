@@ -1,6 +1,6 @@
 {{ $F := . }}
 FormBuilderTextField(
-    name: '{{$F.Name}}',
+    name: '{{lower $F.Name}}',
     decoration: const InputDecoration(labelText: '{{$F.Label}}'),
     keyboardType: TextInputType.number,
     {{ if $F.Length }}

@@ -25,9 +25,10 @@ class _{{.Page.Name}}PageState extends State<{{.Page.Name}}Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('{{ .Page.Label }}'),
+        title: const Text('{{ .Page.Label }}'),
       ),
       body: FormBuilder(
+        key: _formKey,
         child: Stepper(
           onStepContinue: stepContinue,
           currentStep: _step,
@@ -53,7 +54,7 @@ class _{{.Page.Name}}PageState extends State<{{.Page.Name}}Page> {
       final data = {
         {{- range $S := .Page.Steps -}}
         {{- range $F := $S.Fields -}}
-        '{{lower $F.Name}}': _formKey.currentState?.fields['{{lower $F.Name}}']?.transformedValue,
+        '{{$F.Name}}': _formKey.currentState?.fields['{{lower $F.Name}}']?.transformedValue,
         {{- end}}
         {{- end -}}
       };

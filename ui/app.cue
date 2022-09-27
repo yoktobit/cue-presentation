@@ -48,6 +48,13 @@ AppFrontend: gen.#Generator & {
 			TemplatePath: "frontend/flutter/services/sending_service.dart"
 			Filepath:     "lib/services/sending_service.dart"
 		},
+		{
+			In: {
+				Frontend: ParentFrontend
+			}
+			TemplatePath: "frontend/flutter/pages/sent/page_sent.dart"
+			Filepath:     "lib/pages/sent/page_sent.dart"
+		},
 
 		for _, P in ParentFrontend.Pages {
 			In: {

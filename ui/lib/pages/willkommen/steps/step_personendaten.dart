@@ -23,7 +23,7 @@ class _PersonendatenStepContentState extends State<PersonendatenStepContent> {
           
             
 FormBuilderTextField(
-    name: 'Titel',
+    name: 'titel',
     decoration: const InputDecoration(labelText: 'Titel'),
 ),
           
@@ -31,7 +31,7 @@ FormBuilderTextField(
           
             
 FormBuilderTextField(
-    name: 'Vorname',
+    name: 'vorname',
     decoration: const InputDecoration(labelText: 'Vornamen'),
 ),
           
@@ -39,7 +39,7 @@ FormBuilderTextField(
           
             
 FormBuilderTextField(
-    name: 'Nachname',
+    name: 'nachname',
     decoration: const InputDecoration(labelText: 'Nachname'),
 ),
           
@@ -60,4 +60,3 @@ Ein Absatz dies ist.
     );
   }
 }
-

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test1/pages/willkommen/page_sent.dart';
+import 'package:test1/pages/sent/page_sent.dart';
 import 'package:test1/services/sending_service.dart';
-import 'pages/{{ lower .Frontend.FirstPage }}/page_{{ lower .Frontend.FirstPage }}.dart';
+import 'package:test1/pages/{{ lower .Frontend.FirstPage }}/page_{{ lower .Frontend.FirstPage }}.dart';
 
 void main() {
   runApp(const MyApp());
