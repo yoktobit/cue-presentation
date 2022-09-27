@@ -4,14 +4,14 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class PersonenDatenStepContent extends StatefulWidget {
-  const PersonenDatenStepContent({Key? key}) : super(key: key);
+class PersonendatenStepContent extends StatefulWidget {
+  const PersonendatenStepContent({Key? key}) : super(key: key);
 
   @override
-  State<PersonenDatenStepContent> createState() => _PersonenDatenStepContentState();
+  State<PersonendatenStepContent> createState() => _PersonendatenStepContentState();
 }
 
-class _PersonenDatenStepContentState extends State<PersonenDatenStepContent> {
+class _PersonendatenStepContentState extends State<PersonendatenStepContent> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(

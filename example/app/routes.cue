@@ -1,6 +1,8 @@
 package app
 
-DemoRoutes: {
+import "github.com/yoktobit/yoktocue/schema"
+
+DemoRoutes: schema.#Routes & {
     "/demo/person/create": {
         Name:   "CreatePerson"
         Method: "post"
@@ -8,3 +10,5 @@ DemoRoutes: {
         Output: CreatePersonOutput
     }
 }
+
+CreatePersonRoute: [ for x in DemoRoutes if x.Name == "CreatePerson" {x}][0]

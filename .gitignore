@@ -1,2 +1,3 @@
 project/.vscode
 project/cue.mod/pkg
+**/libKopie*

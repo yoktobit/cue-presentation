@@ -28,6 +28,8 @@ marp: true
 * Erweiterte Validierungsmöglichkeiten
 * Generator-Funktionen
 * Variablen und mathematische Operatoren
+* Selektoren
+* Scripting/Tasks
 
 ---
 # Anwendungsfälle
@@ -39,6 +41,13 @@ marp: true
   * Configs aller Art
 * Datenvalidierung
 * z.B. im Zusammenhang mit hofstadter.io: Codegenerierung
+
+---
+# Nachteile
+
+* _kein_ Standard
+* zentralisierte Entwicklung
+* Features > Performance
 
 ---
 # Du stellst eine Sprache vor und zeigst Folien?
