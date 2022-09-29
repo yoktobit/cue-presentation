@@ -5,4 +5,3 @@ type PersonRecord struct {
 	Titel string
 	Vorname string
 }
-
