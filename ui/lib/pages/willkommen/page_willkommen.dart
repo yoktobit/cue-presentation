@@ -53,8 +53,16 @@ class _WillkommenPageState extends State<WillkommenPage> {
         'Vorname': _formKey.currentState?.fields['vorname']?.transformedValue,
         'Nachname': _formKey.currentState?.fields['nachname']?.transformedValue,
       };
+
       final json = jsonEncode(data);
-      widget.sendingService.send("/demo/person/create", json);
+      [1, 2, 3].forEach((index1) {
+        [1, 2, 3].forEach((index2) {
+          print(_formKey.currentState?.fields['kindername_${index1}_$index2']
+              ?.transformedValue);
+        });
+      });
+      print(_formKey.currentState?.fields);
+      //widget.sendingService.send("/demo/person/create", json);
       Navigator.pushNamed(context, '/sent');
     }
   }
