@@ -25,6 +25,7 @@ class ResponsivePage extends StatefulWidget {
 
 class _ResponsivePageState extends State<ResponsivePage> {
   final _formKey = GlobalKey<FormBuilderState>();
+  int index = 0;
 
   final form = FormGroup({
     "name": FormControl<String>(),
@@ -40,6 +41,11 @@ class _ResponsivePageState extends State<ResponsivePage> {
         title: const Text('Reactive Form'),
       ),
       body: Stepper(
+        currentStep: index,
+        onStepTapped: (value) => setState(() {
+          index = value;
+        }),
+        type: StepperType.horizontal,
         steps: [
           Step(
             title: const Text("Schritt 1"),
@@ -50,33 +56,56 @@ class _ResponsivePageState extends State<ResponsivePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      const ListTile(
+                        title: Text("Personendaten"),
+                      ),
+                      const Divider(),
                       react.ReactiveTextField<String>(
                         formControlName: "name",
                         decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          border: OutlineInputBorder(),
                           labelText: "Name",
                         ),
                       ),
-                      react.ReactiveTextField<String>(
+                      const Divider(),
+                      ReactiveTextField<String>(
                         formControlName: "vorname",
                         decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          border: OutlineInputBorder(),
                           labelText: "Vorname",
                         ),
                       ),
+                      const Divider(),
                       SeparatedDateField(
                         context: context,
                         formControlName: "birth",
-                      )
+                        labelText: "Geburtsdatum",
+                      ),
+                      const Divider(),
                     ],
                   ),
                 )
               ]),
             ),
-          )
+          ),
+          Step(
+            title: const Text("Schritt 2"),
+            subtitle: const Text("Weiterer Schritt"),
+            content: ReactiveForm(
+              formGroup: form,
+              child: Column(
+                children: [],
+              ),
+            ),
+          ),
         ],
         onStepContinue: () {
           print(form.value);
+          setState(() {
+            index++;
+          });
         },
       ),
     );
