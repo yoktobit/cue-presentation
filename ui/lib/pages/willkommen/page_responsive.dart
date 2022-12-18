@@ -64,12 +64,6 @@ class _ResponsivePageState extends State<ResponsivePage> {
                           labelText: "Vorname",
                         ),
                       ),
-                      ReactiveDatePickerFormField(
-                        context: context,
-                        formControlName: "geburtsdatum",
-                        decoration:
-                            const InputDecoration(labelText: "Geburtsdatum"),
-                      ),
                       SeparatedDateField(
                         context: context,
                         formControlName: "birth",

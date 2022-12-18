@@ -72,71 +72,105 @@ class _SeparatedDateFieldState<T, V>
       ),
       ConstrainedBox(
         constraints: const BoxConstraints.tightFor(width: 100),
-        child: TextFormField(
-          controller: dayController,
-          inputFormatters: [
-            ThousandsFormatter(formatter: NumberFormat("##")),
-            LengthLimitingTextInputFormatter(2)
-          ],
-          decoration:
-              const InputDecoration(labelText: "Geburtstag", helperText: "Tag"),
-          onChanged: (value) {
-            if (this.value == null) {
-              return;
-            }
-            final newValue = int.tryParse(value);
-            if (newValue != null) {
-              didChange(SeparatedDate(
-                  day: int.parse(value),
-                  month: this.value!.month,
-                  year: this.value!.year));
-            } else {
-              didChange(SeparatedDate(day: 0, month: 0, year: 0));
-              control.setErrors({"FormatError": "FormatFehler"});
-            }
-          },
+        child: Focus(
+          onFocusChange: (value) => _focusChange(value, dayController, 0),
+          skipTraversal: true,
+          child: TextFormField(
+            controller: dayController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(2)
+            ],
+            decoration: const InputDecoration(
+                labelText: "Geburtstag", helperText: "Tag"),
+            onEditingComplete: () => _editingComplete(dayController, 0),
+            onChanged: (value) => _changed(value, 0),
+          ),
         ),
       ),
       ConstrainedBox(
         constraints: const BoxConstraints.tightFor(width: 100),
-        child: TextFormField(
-          controller: monthController,
-          inputFormatters: [
-            ThousandsFormatter(formatter: NumberFormat("##")),
-            LengthLimitingTextInputFormatter(2)
-          ],
-          decoration: const InputDecoration(labelText: "", helperText: "Monat"),
-          onChanged: (value) {
-            if (this.value == null) {
-              return;
-            }
-            didChange(SeparatedDate(
-                day: this.value!.day,
-                month: int.parse(value),
-                year: this.value!.year));
-          },
+        child: Focus(
+          onFocusChange: (value) => _focusChange(value, monthController, 1),
+          skipTraversal: true,
+          child: TextFormField(
+            controller: monthController,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(2)
+            ],
+            decoration:
+                const InputDecoration(labelText: "", helperText: "Monat"),
+            onEditingComplete: () => _editingComplete(monthController, 1),
+            onChanged: (value) => _changed(value, 1),
+          ),
         ),
       ),
       ConstrainedBox(
         constraints: const BoxConstraints.tightFor(width: 100),
-        child: TextFormField(
-          controller: yearController,
-          inputFormatters: [
-            ThousandsFormatter(formatter: NumberFormat("####")),
-            LengthLimitingTextInputFormatter(4)
-          ],
-          decoration: const InputDecoration(labelText: "", helperText: "Jahr"),
-          onChanged: (value) {
-            if (this.value == null) {
-              return;
-            }
-            didChange(SeparatedDate(
-                day: this.value!.day,
-                month: this.value!.month,
-                year: int.parse(value)));
-          },
+        child: Focus(
+          onFocusChange: (value) => _focusChange(value, yearController, 2),
+          skipTraversal: true,
+          child: TextFormField(
+            controller: yearController,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(4)
+            ],
+            decoration:
+                const InputDecoration(labelText: "", helperText: "Jahr"),
+            onEditingComplete: () => _editingComplete(yearController, 2),
+            onChanged: (value) => _changed(value, 2),
+          ),
         ),
       ),
     ]);
+  }
+
+  void _editingComplete(TextEditingController controller, int field) {
+    if (controller.text.isEmpty) {
+      return;
+    }
+    if (controller.text.length == 1 || controller.text.length == 3) {
+      control.setErrors({"WrongDateFormatError": "Wrong Date Format Error"});
+    }
+
+    if (field == 2 && controller.text.length == 2) {
+      controller.text = "20${controller.text}";
+    } else if (field < 2 && controller.text.length == 1) {
+      controller.text = controller.text.padLeft(2, '0');
+    }
+    _changed(controller.text, field);
+    /*didChange(SeparatedDate(
+        day: field == 0 ? int.parse(controller.text) : (value?.day ?? 0),
+        month: field == 1 ? int.parse(controller.text) : (value?.month ?? 0),
+        year: field == 2 ? int.parse(controller.text) : (value?.year ?? 0)));
+    control.markAsTouched(updateParent: true, emitEvent: true);*/
+  }
+
+  void _changed(String? value, int field) {
+    if (value == null || value.isEmpty) {
+      return;
+    }
+    final newValue = int.tryParse(value);
+    if (newValue != null) {
+      didChange(SeparatedDate(
+        day: field == 0 ? newValue : (this.value?.day ?? 0),
+        month: field == 1 ? newValue : (this.value?.month ?? 0),
+        year: field == 2 ? newValue : (this.value?.year ?? 0),
+      ));
+      control.markAsTouched();
+    } else {
+      didChange(SeparatedDate(day: 0, month: 0, year: 0));
+      control.setErrors({"FormatError": "FormatFehler"});
+    }
+  }
+
+  void _focusChange(
+      bool hasFocus, TextEditingController controller, int field) {
+    if (!hasFocus) {
+      _editingComplete(controller, field);
+    }
   }
 }
