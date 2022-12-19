@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl_browser.dart';
+import 'package:test1/examples/demo_data.dart';
+import 'package:test1/pages/code_list/page_code_list.dart';
 import 'package:test1/pages/sent/page_sent.dart';
 import 'package:test1/pages/willkommen/page_responsive.dart';
 import 'package:test1/services/sending_service.dart';
@@ -33,10 +35,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      initialRoute: '/responsive',
+      initialRoute: '/codelist',
       routes: {
         '/responsive': (context) => const ResponsivePage(sendingService),
         '/willkommen': (context) => const WillkommenPage(sendingService),
+        '/codelist': (context) => CodeListPage(codeList: createDemoCodeList()),
         '/sent': (context) => const SentPage(),
       },
     );
