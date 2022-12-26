@@ -2,6 +2,7 @@ import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
 import 'package:test1/model/code_column.dart';
 import 'package:test1/model/code_data.dart';
 import 'package:test1/model/code_definition.dart';
+import 'package:test1/model/code_row.dart';
 
 part 'code_list.gform.dart';
 

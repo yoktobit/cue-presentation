@@ -1,9 +1,10 @@
-import 'dart:collection';
-
 import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
+import 'package:test1/model/code_row.dart';
 
 class CodeData {
-  List<Map<String, dynamic>>? values = [{}];
+  List<CodeRow>? rows;
 
-  CodeData({this.values});
+  CodeData({
+    this.rows = const [],
+  });
 }
