@@ -1,15 +1,12 @@
-import 'dart:html';
 import 'dart:convert';
+
 import 'package:file_saver/file_saver.dart';
-import 'package:file_saver/file_saver_web.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:test1/examples/demo_data.dart';
+import 'package:test1/model/code_data.dart';
+import 'package:test1/model/code_definition.dart';
 import 'package:test1/model/code_list.dart';
-import 'package:test1/services/sending_service.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class CodeListPage extends StatefulWidget {
   final CodeList codeList;
@@ -23,13 +20,26 @@ class CodeListPage extends StatefulWidget {
 class _CodeListPageState extends State<CodeListPage> {
   @override
   Widget build(BuildContext context) {
-    var form = createDemoCodeList();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Code List'),
+        actions: [
+          CodeListFormBuilder(
+              model: widget.codeList,
+              builder: (context, formModel, child) =>
+                  ReactiveCodeListFormConsumer(
+                    builder: (context, formModel, child) => IconButton(
+                      onPressed: () => send(formModel),
+                      icon: const Icon(Icons.save_outlined),
+                      padding: kDebugMode
+                          ? const EdgeInsetsDirectional.only(end: 50)
+                          : const EdgeInsets.all(8),
+                    ),
+                  ))
+        ],
       ),
       body: CodeListFormBuilder(
-        model: form,
+        model: widget.codeList,
         builder: (context, formModel, child) => Card(
           child: Column(
             children: [
@@ -73,14 +83,17 @@ class _CodeListPageState extends State<CodeListPage> {
                             )
                             .toList(),
                       )),
+              const Divider(),
               ReactiveCodeListFormConsumer(
                 builder: (context, formGroup, child) => ElevatedButton(
-                    onPressed: () => gotoData(formGroup),
-                    child: const Text("Daten bearbeiten")),
+                  onPressed: () => gotoData(formGroup),
+                  child: const Text("Daten bearbeiten"),
+                ),
               ),
-              ReactiveFormConsumer(
-                builder: (context, formGroup, child) => ElevatedButton(
-                  onPressed: formGroup.dirty ? () => send(formGroup) : null,
+              const Divider(),
+              ReactiveCodeListFormConsumer(
+                builder: (context, codeListForm, child) => ElevatedButton(
+                  onPressed: () => send(codeListForm),
                   child: const Text("Speichern"),
                 ),
               ),
@@ -91,16 +104,16 @@ class _CodeListPageState extends State<CodeListPage> {
     );
   }
 
-  void send(FormGroup form) {
+  void send(CodeListForm codeListForm) {
     if (kDebugMode) {
       print("Huhu");
-      print(jsonEncode(form.value));
+      print(jsonEncode(widget.codeList));
     }
     setState(() {
-      form.markAsPristine();
+      codeListForm.form.markAsPristine();
     });
-    FileSaver.instance.saveFile(
-        "test", Uint8List.fromList(jsonEncode(form.value).codeUnits), "json",
+    FileSaver.instance.saveFile("test",
+        Uint8List.fromList(jsonEncode(codeListForm.codeList).codeUnits), "json",
         mimeType: MimeType.JSON);
   }
 
@@ -109,7 +122,16 @@ class _CodeListPageState extends State<CodeListPage> {
   }
 
   gotoData(CodeListForm form) {
-    send(form.form);
-    Navigator.pushNamed(context, '/codelistdata', arguments: form);
+    Navigator.pushNamed(context, '/codelistdata', arguments: form).then(
+      (map) {
+        final codeListFormMap = map as Map<String, CodeListForm>;
+        if (kDebugMode) {
+          print(codeListFormMap["form"]?.codeList?.data?.rows?.last.value);
+          print((codeListFormMap["form"]?.form.control("data") as FormArray)
+              .rawValue);
+        }
+        setState(() {});
+      },
+    );
   }
 }

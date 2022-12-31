@@ -1,10 +1,7 @@
-import 'dart:html';
-
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_masked_formatter/multi_masked_formatter.dart';
-import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class ReactiveDatePickerFormField extends ReactiveFormField<String, String> {

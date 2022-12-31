@@ -1,19 +1,10 @@
-import 'dart:html';
-import 'dart:convert';
-import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:multi_masked_formatter/multi_masked_formatter.dart';
-import 'package:pattern_formatter/date_formatter.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_text_field/reactive_text_field.dart' as react;
-import 'package:test1/controls/datepicker_form_field.dart';
 import 'package:test1/controls/separated_date.dart';
 import 'package:test1/controls/separated_date_field.dart';
 import 'package:test1/services/sending_service.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-
-import 'steps/step_personendaten.dart';
 
 class ResponsivePage extends StatefulWidget {
   final SendingService sendingService;

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:test1/model/code_data.dart';
 import 'package:test1/model/code_list.dart';
 
 class CodeListDataPage extends StatefulWidget {
@@ -21,11 +22,15 @@ class _CodeListDataPageState extends State<CodeListDataPage> {
         "data": FormArray(form.model.data?.rows
                 ?.map((row) => FormGroup({
                       ...{"selected": FormControl(value: row.selected)},
-                      ...Map.fromEntries(form.model.definition?.columns
-                              ?.map((column) => MapEntry(column.name,
-                                  FormControl(value: row.value?[column.name])))
-                              .toList() ??
-                          [])
+                      "value": FormGroup(
+                        Map.fromEntries(form.model.definition?.columns
+                                ?.map((column) => MapEntry(
+                                    column.name,
+                                    FormControl(
+                                        value: row.value?[column.name])))
+                                .toList() ??
+                            []),
+                      )
                     }))
                 .toList() ??
             [])
@@ -77,9 +82,10 @@ class _CodeListDataPageState extends State<CodeListDataPage> {
                                           .map(
                                             (column) => DataCell(
                                               ReactiveTextField(
-                                                formControl: row.control(column
-                                                    .nameControl
-                                                    .value!) as FormControl,
+                                                formControl: (row.control(
+                                                        "value") as FormGroup)
+                                                    .control(column.nameControl
+                                                        .value!) as FormControl,
                                                 decoration: InputDecoration(
                                                     hintText: column
                                                         .labelControl.value),
@@ -94,7 +100,7 @@ class _CodeListDataPageState extends State<CodeListDataPage> {
               const Divider(),
               ReactiveFormConsumer(
                 builder: (context, formGroup, child) => ElevatedButton(
-                  onPressed: formGroup.dirty ? () => send(formGroup) : null,
+                  onPressed: formGroup.dirty ? () => send() : null,
                   child: const Text("Speichern und zurück"),
                 ),
               ),
@@ -105,10 +111,11 @@ class _CodeListDataPageState extends State<CodeListDataPage> {
     );
   }
 
-  void send(FormGroup form) {
+  void send() {
     if (kDebugMode) {
-      print(form.rawValue);
+      print(widget.form.form.rawValue);
     }
-    Navigator.pop(context);
+    widget.form.codeList?.data = CodeData.fromForm(widget.form);
+    Navigator.pop(context, {'form': widget.form});
   }
 }

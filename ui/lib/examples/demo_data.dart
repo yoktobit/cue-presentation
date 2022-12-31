@@ -3,7 +3,7 @@ import 'package:test1/model/code_data.dart';
 import 'package:test1/model/code_definition.dart';
 import 'package:test1/model/code_list.dart';
 import 'package:test1/model/code_row.dart';
-import 'package:test1/pages/code_list/code_lists.dart';
+import 'package:test1/model/code_lists.dart';
 
 CodeLists createDemoCodeLists() => CodeLists(
       lists: [
