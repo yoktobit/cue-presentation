@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_text_field/reactive_text_field.dart' as react;
 import 'package:test1/controls/separated_date.dart';
@@ -8,14 +8,13 @@ import 'package:test1/services/sending_service.dart';
 
 class ResponsivePage extends StatefulWidget {
   final SendingService sendingService;
-  const ResponsivePage(final this.sendingService, {Key? key}) : super(key: key);
+  const ResponsivePage(this.sendingService, {Key? key}) : super(key: key);
 
   @override
   State<ResponsivePage> createState() => _ResponsivePageState();
 }
 
 class _ResponsivePageState extends State<ResponsivePage> {
-  final _formKey = GlobalKey<FormBuilderState>();
   int index = 0;
 
   final form = FormGroup({
@@ -87,13 +86,15 @@ class _ResponsivePageState extends State<ResponsivePage> {
             content: ReactiveForm(
               formGroup: form,
               child: Column(
-                children: [],
+                children: const [],
               ),
             ),
           ),
         ],
         onStepContinue: () {
-          print(form.value);
+          if (kDebugMode) {
+            print(form.value);
+          }
           setState(() {
             index++;
           });

@@ -5,14 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:test1/examples/demo_data.dart';
 import 'package:test1/model/code_lists.dart';
+import 'package:test1/pages/start/navigation_bar.dart';
 
-class StartPage extends StatelessWidget {
+class StartPage extends StatefulWidget {
   const StartPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
+  CodeLists? codelists;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Konfigurator")),
+      bottomNavigationBar: createBottomNavigationBar(context, codelists),
       body: Column(
         children: [
           ElevatedButton(
@@ -27,13 +36,20 @@ class StartPage extends StatelessWidget {
               onPressed: () => onSampleConfigurationPressed(context),
               child: const Text("Beispielkonfiguration laden")),
           const Divider(),
+          ElevatedButton(
+              onPressed: () => onSavePressed(context),
+              child: const Text("Konfiguration speichern")),
         ],
       ),
     );
   }
 
   void onNewConfigurationPressed(BuildContext context) {
-    Navigator.pushNamed(context, '/codelists', arguments: CodeLists.newEmpty());
+    setState(() {
+      codelists = CodeLists.newEmpty();
+    });
+
+    Navigator.pushNamed(context, '/codelists', arguments: codelists);
   }
 
   void onLoadConfigurationPressed(BuildContext context) async {
@@ -42,14 +58,25 @@ class StartPage extends StatelessWidget {
   }
 
   void onSampleConfigurationPressed(BuildContext context) {
-    Navigator.pushNamed(context, '/codelists',
-        arguments: createDemoCodeLists());
+    setState(() {
+      codelists = createDemoCodeLists();
+    });
+    Navigator.pushNamed(context, '/codelists', arguments: codelists)
+        .then(onReturnFromModal);
   }
 
   void uploadFinished(PlatformFile file, BuildContext context) {
     final jsonBytes = file.bytes!;
     final jsonMap = jsonDecode(String.fromCharCodes(jsonBytes));
-    Navigator.pushNamed(context, '/codelists',
-        arguments: CodeLists.fromJson(jsonMap));
+    setState(() {
+      codelists = CodeLists.fromJson(jsonMap);
+    });
+    Navigator.pushNamed(context, '/codelists', arguments: codelists);
   }
+
+  void onReturnFromModal(Object? returnValue) {
+    codelists = returnValue as CodeLists;
+  }
+
+  void onSavePressed(BuildContext context) {}
 }

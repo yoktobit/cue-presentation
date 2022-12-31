@@ -1,11 +1,9 @@
-import 'dart:convert';
-
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:test1/examples/demo_data.dart';
 import 'package:test1/model/code_list.dart';
 import 'package:test1/model/code_lists.dart';
+import 'package:test1/pages/start/navigation_bar.dart';
 
 class CodeListsPage extends StatefulWidget {
   final CodeLists? codelists;
@@ -22,6 +20,9 @@ class _CodeListsPageState extends State<CodeListsPage> {
   @override
   void initState() {
     codelists = widget.codelists ?? createDemoCodeLists();
+    if (kDebugMode) {
+      print("State initialized");
+    }
     super.initState();
   }
 
@@ -29,8 +30,9 @@ class _CodeListsPageState extends State<CodeListsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Übersicht der Code Listen'),
+        title: const Text('Übersicht der Code-Listen'),
       ),
+      bottomNavigationBar: createBottomNavigationBar(context, codelists),
       body: Column(
         children: [
           DataTable(
@@ -40,21 +42,20 @@ class _CodeListsPageState extends State<CodeListsPage> {
               DataColumn(label: Text("Aktionen")),
             ],
             rows: codelists.lists
-                    .map(
-                      (codelist) => DataRow(
-                        cells: [
-                          DataCell(Text(codelist.definition?.name ?? "")),
-                          DataCell(Text(codelist.definition?.label ?? "")),
-                          DataCell(ElevatedButton.icon(
-                            onPressed: () => onEditButtonPressed(codelist),
-                            icon: const Icon(Icons.edit),
-                            label: const Text("Edit"),
-                          )),
-                        ],
-                      ),
-                    )
-                    .toList() ??
-                [],
+                .map(
+                  (codelist) => DataRow(
+                    cells: [
+                      DataCell(Text(codelist.definition?.name ?? "")),
+                      DataCell(Text(codelist.definition?.label ?? "")),
+                      DataCell(ElevatedButton.icon(
+                        onPressed: () => onEditButtonPressed(codelist),
+                        icon: const Icon(Icons.edit),
+                        label: const Text("Edit"),
+                      )),
+                    ],
+                  ),
+                )
+                .toList(),
           ),
         ],
       ),

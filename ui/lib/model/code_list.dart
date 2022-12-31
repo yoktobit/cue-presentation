@@ -3,7 +3,6 @@ import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
 import 'package:test1/model/code_column.dart';
 import 'package:test1/model/code_data.dart';
 import 'package:test1/model/code_definition.dart';
-import 'package:test1/model/code_row.dart';
 
 part 'code_list.g.dart';
 part 'code_list.gform.dart';
@@ -21,6 +20,10 @@ class CodeList {
 
   factory CodeList.fromJson(Map<String, dynamic> json) =>
       _$CodeListFromJson(json);
+
+  factory CodeList.fromForm(CodeListForm codeListForm) {
+    return CodeList.fromJson(codeListForm.form.rawValue);
+  }
 
   Map<String, dynamic> toJson() => _$CodeListToJson(this);
 }

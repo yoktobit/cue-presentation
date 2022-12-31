@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:test1/services/sending_service.dart';
@@ -8,7 +7,7 @@ import 'steps/step_personendaten.dart';
 
 class WillkommenPage extends StatefulWidget {
   final SendingService sendingService;
-  const WillkommenPage(final this.sendingService, {Key? key}) : super(key: key);
+  const WillkommenPage(this.sendingService, {Key? key}) : super(key: key);
 
   @override
   State<WillkommenPage> createState() => _WillkommenPageState();
@@ -47,21 +46,15 @@ class _WillkommenPageState extends State<WillkommenPage> {
         _step++;
       });
     } else {
-      final data = {
-        'Titel': _formKey.currentState?.fields['titel']?.transformedValue,
-        'Vorname': _formKey.currentState?.fields['vorname']?.transformedValue,
-        'Nachname': _formKey.currentState?.fields['nachname']?.transformedValue,
-      };
-
-      final json = jsonEncode(data);
-      [1, 2, 3].forEach((index1) {
-        [1, 2, 3].forEach((index2) {
-          print(_formKey.currentState?.fields['kindername_${index1}_$index2']
-              ?.transformedValue);
-        });
-      });
-      print(_formKey.currentState?.fields);
-      //widget.sendingService.send("/demo/person/create", json);
+      if (kDebugMode) {
+        for (var index1 in [1, 2, 3]) {
+          for (var index2 in [1, 2, 3]) {
+            print(_formKey.currentState?.fields['kindername_${index1}_$index2']
+                ?.transformedValue);
+          }
+        }
+        print(_formKey.currentState?.fields);
+      }
       Navigator.pushNamed(context, '/sent');
     }
   }

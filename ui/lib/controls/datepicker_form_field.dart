@@ -40,7 +40,7 @@ class _ReactiveDatePickerFormFieldState<T, V>
       decoration: InputDecoration(
         labelText: "Geburtsdatum",
         icon: IconButton(
-          icon: Icon(Icons.date_range),
+          icon: const Icon(Icons.date_range),
           onPressed: () async {
             final currentDateText = textFieldController.text;
             DateTime? currentDate;

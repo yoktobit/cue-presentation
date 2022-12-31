@@ -6,7 +6,7 @@ import 'package:test1/controls/separated_date.dart';
 
 class SeparatedDateField
     extends ReactiveFormField<SeparatedDate, SeparatedDate> {
-  String? labelText;
+  final String? labelText;
 
   SeparatedDateField({
     super.key,

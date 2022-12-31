@@ -4,9 +4,8 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:test1/model/code_data.dart';
-import 'package:test1/model/code_definition.dart';
 import 'package:test1/model/code_list.dart';
+import 'package:test1/pages/start/navigation_bar.dart';
 
 class CodeListPage extends StatefulWidget {
   final CodeList codeList;
@@ -22,7 +21,7 @@ class _CodeListPageState extends State<CodeListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Code List'),
+        title: Text('Code-Liste ${widget.codeList.definition?.name}'),
         actions: [
           CodeListFormBuilder(
               model: widget.codeList,
@@ -108,17 +107,19 @@ class _CodeListPageState extends State<CodeListPage> {
     if (kDebugMode) {
       print("Huhu");
       print(jsonEncode(widget.codeList));
+      print(codeListForm.model.definition?.name);
+      print(codeListForm.definitionForm.nameControlPath());
     }
-    setState(() {
-      codeListForm.form.markAsPristine();
-    });
+    //codeListForm.updateValue(CodeList.fromForm(codeListForm));
     FileSaver.instance.saveFile("test",
-        Uint8List.fromList(jsonEncode(codeListForm.codeList).codeUnits), "json",
+        Uint8List.fromList(jsonEncode(codeListForm.model).codeUnits), "json",
         mimeType: MimeType.JSON);
   }
 
   void download(FormGroup form) {
-    print(jsonEncode(form));
+    if (kDebugMode) {
+      print(jsonEncode(form));
+    }
   }
 
   gotoData(CodeListForm form) {
