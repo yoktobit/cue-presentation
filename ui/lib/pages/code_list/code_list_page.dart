@@ -22,98 +22,72 @@ class _CodeListPageState extends State<CodeListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Code-Liste ${widget.codeList.definition?.name}'),
-        actions: [
-          CodeListFormBuilder(
-              model: widget.codeList,
-              builder: (context, formModel, child) =>
-                  ReactiveCodeListFormConsumer(
-                    builder: (context, formModel, child) => IconButton(
-                      onPressed: () => send(formModel),
-                      icon: const Icon(Icons.save_outlined),
-                      padding: kDebugMode
-                          ? const EdgeInsetsDirectional.only(end: 50)
-                          : const EdgeInsets.all(8),
-                    ),
-                  ))
-        ],
       ),
       body: CodeListFormBuilder(
         model: widget.codeList,
         builder: (context, formModel, child) => Card(
-          child: Column(
-            children: [
-              ReactiveTextField(
-                formControl: formModel.definitionForm.nameControl,
-                decoration: const InputDecoration(
-                  labelText: "Name",
+          child: WillPopScope(
+            onWillPop: () async => onBack(formModel),
+            child: Column(
+              children: [
+                ReactiveTextField(
+                  formControl: formModel.definitionForm.nameControl,
+                  decoration: const InputDecoration(
+                    labelText: "Name",
+                  ),
                 ),
-              ),
-              ReactiveTextField(
-                formControl: formModel.definitionForm.labelControl,
-                decoration: const InputDecoration(
-                  labelText: "Label",
+                ReactiveTextField(
+                  formControl: formModel.definitionForm.labelControl,
+                  decoration: const InputDecoration(
+                    labelText: "Label",
+                  ),
                 ),
-              ),
-              ReactiveFormArray(
-                  formArray: formModel.definitionForm.columnsControl,
-                  builder: (context, formArray, child) => DataTable(
-                        columns: const [
-                          DataColumn(label: Text("Spaltenname")),
-                          DataColumn(label: Text("Beschreibung")),
-                        ],
-                        rows: formModel.definitionForm.columnsCodeColumnForm
-                            .map(
-                              (column) => DataRow(
-                                cells: [
-                                  DataCell(
-                                    ReactiveTextField(
-                                      formControl: column.nameControl,
-                                      decoration: const InputDecoration(),
+                ReactiveFormArray(
+                    formArray: formModel.definitionForm.columnsControl,
+                    builder: (context, formArray, child) => DataTable(
+                          columns: const [
+                            DataColumn(label: Text("Spaltenname")),
+                            DataColumn(label: Text("Beschreibung")),
+                          ],
+                          rows: formModel.definitionForm.columnsCodeColumnForm
+                              .map(
+                                (column) => DataRow(
+                                  cells: [
+                                    DataCell(
+                                      ReactiveTextField(
+                                        formControl: column.nameControl,
+                                        decoration: const InputDecoration(),
+                                      ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    ReactiveTextField(
-                                      formControl: column.labelControl,
-                                      decoration: const InputDecoration(),
+                                    DataCell(
+                                      ReactiveTextField(
+                                        formControl: column.labelControl,
+                                        decoration: const InputDecoration(),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            )
-                            .toList(),
-                      )),
-              const Divider(),
-              ReactiveCodeListFormConsumer(
-                builder: (context, formGroup, child) => ElevatedButton(
-                  onPressed: () => gotoData(formGroup),
-                  child: const Text("Daten bearbeiten"),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                        )),
+                const Divider(),
+                ReactiveCodeListFormConsumer(
+                  builder: (context, formGroup, child) => ElevatedButton(
+                    onPressed: () => gotoData(formGroup),
+                    child: const Text("Daten bearbeiten"),
+                  ),
                 ),
-              ),
-              const Divider(),
-              ReactiveCodeListFormConsumer(
-                builder: (context, codeListForm, child) => ElevatedButton(
-                  onPressed: () => send(codeListForm),
-                  child: const Text("Speichern"),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  void send(CodeListForm codeListForm) {
-    if (kDebugMode) {
-      print("Huhu");
-      print(jsonEncode(widget.codeList));
-      print(codeListForm.model.definition?.name);
-      print(codeListForm.definitionForm.nameControlPath());
-    }
-    //codeListForm.updateValue(CodeList.fromForm(codeListForm));
-    FileSaver.instance.saveFile("test",
-        Uint8List.fromList(jsonEncode(codeListForm.model).codeUnits), "json",
-        mimeType: MimeType.JSON);
+  Future<bool> onBack(CodeListForm codeList) async {
+    Navigator.pop(context, codeList.model);
+    return false;
   }
 
   void download(FormGroup form) {

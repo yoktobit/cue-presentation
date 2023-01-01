@@ -62,7 +62,12 @@ class _CodeListsPageState extends State<CodeListsPage> {
     );
   }
 
-  void onEditButtonPressed(CodeList codelist) {
-    Navigator.pushNamed(context, '/codelist', arguments: codelist);
+  void onEditButtonPressed(CodeList codelist) async {
+    var returnedCodelist =
+        await Navigator.pushNamed(context, '/codelist', arguments: codelist)
+            as CodeList;
+    var index = codelists.lists.indexWhere(
+        (element) => element.definition?.id == returnedCodelist.definition?.id);
+    codelists.lists.replaceRange(index, index + 1, [returnedCodelist]);
   }
 }

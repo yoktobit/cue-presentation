@@ -721,7 +721,10 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
       );
     }
     return CodeDefinition(
-        name: _nameValue, label: _labelValue, columns: _columnsValue);
+        name: _nameValue,
+        label: _labelValue,
+        columns: _columnsValue,
+        id: codeDefinition?.id);
   }
 
   CodeDefinitionForm copyWithPath(String? path) {

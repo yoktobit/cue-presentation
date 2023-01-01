@@ -14,11 +14,13 @@ CodeDefinition _$CodeDefinitionFromJson(Map<String, dynamic> json) =>
               ?.map((e) => CodeColumn.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      id: json['id'] as String?,
     );
 
 Map<String, dynamic> _$CodeDefinitionToJson(CodeDefinition instance) =>
     <String, dynamic>{
       'name': instance.name,
       'label': instance.label,
+      'id': instance.id,
       'columns': instance.columns,
     };
