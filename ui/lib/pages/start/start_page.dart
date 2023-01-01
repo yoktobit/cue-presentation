@@ -4,9 +4,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
+import 'package:test1/controls/medium_divider.dart';
 import 'package:test1/examples/demo_data.dart';
 import 'package:test1/model/code_lists.dart';
+import 'package:test1/pages/code_list/code_lists_page.dart';
 import 'package:test1/pages/start/navigation_bar.dart';
 
 class StartPage extends StatefulWidget {
@@ -18,6 +21,8 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   CodeLists? codelists;
+
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,35 +39,67 @@ class _StartPageState extends State<StartPage> {
           ),
         ],
       ),
-      bottomNavigationBar: createBottomNavigationBar(context, codelists),
-      body: Column(
-        children: [
-          ElevatedButton(
-              onPressed: () => onNewConfigurationPressed(context),
-              child: const Text("Neue Konfiguration")),
-          const Divider(),
-          ElevatedButton(
-              onPressed: () => onLoadConfigurationPressed(context),
-              child: const Text("Konfiguration laden...")),
-          const Divider(),
-          ElevatedButton(
-              onPressed: () => onSampleConfigurationPressed(context),
-              child: const Text("Beispielkonfiguration laden")),
-          const Divider(),
-          ElevatedButton(
-              onPressed: () => onSavePressed(context),
-              child: const Text("Konfiguration speichern")),
-        ],
-      ),
+      bottomNavigationBar: codelists != null
+          ? BottomNavigationBar(
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: "Dashboard",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list),
+                  label: "Listen",
+                ),
+              ],
+              onTap: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              currentIndex: _selectedIndex,
+            )
+          : null,
+      body: _selectedIndex == 0
+          ? Column(
+              children: [
+                const MediumDivider(),
+                ElevatedButton(
+                    onPressed: () => onNewConfigurationPressed(context),
+                    child: const Text("Neue Konfiguration")),
+                const MediumDivider(),
+                ElevatedButton(
+                    onPressed: () => onLoadConfigurationPressed(context),
+                    child: const Text("Konfiguration laden...")),
+                const MediumDivider(),
+                ElevatedButton(
+                    onPressed: () => onSavePressed(context),
+                    child: const Text("Konfiguration speichern")),
+                const MediumDivider(),
+                ElevatedButton(
+                    onPressed: () => onSampleConfigurationPressed(context),
+                    child: const Text("Beispielkonfiguration laden")),
+                const MediumDivider(),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  SelectableText(
+                      'Geladene Konfigurations-ID: ${codelists?.id}'),
+                  IconButton(
+                      onPressed: () =>
+                          Clipboard.setData(ClipboardData(text: codelists?.id)),
+                      icon: const Icon(Icons.copy)),
+                ]),
+              ],
+            )
+          : CodeListsPage(
+              codelists: codelists,
+            ),
     );
   }
 
   void onNewConfigurationPressed(BuildContext context) {
     setState(() {
       codelists = CodeLists.newEmpty();
+      _selectedIndex = 1;
     });
-
-    Navigator.pushNamed(context, '/codelists', arguments: codelists);
   }
 
   void onLoadConfigurationPressed(BuildContext context) async {
@@ -73,8 +110,8 @@ class _StartPageState extends State<StartPage> {
   void onSampleConfigurationPressed(BuildContext context) {
     setState(() {
       codelists = createDemoCodeLists();
+      _selectedIndex = 1;
     });
-    Navigator.pushNamed(context, '/codelists', arguments: codelists);
   }
 
   void uploadFinished(PlatformFile file, BuildContext context) {
@@ -82,8 +119,8 @@ class _StartPageState extends State<StartPage> {
     final jsonMap = jsonDecode(String.fromCharCodes(jsonBytes));
     setState(() {
       codelists = CodeLists.fromJson(jsonMap);
+      _selectedIndex = 1;
     });
-    Navigator.pushNamed(context, '/codelists', arguments: codelists);
   }
 
   void onSavePressed(BuildContext context) {

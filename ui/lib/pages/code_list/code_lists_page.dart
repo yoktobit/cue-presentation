@@ -28,37 +28,31 @@ class _CodeListsPageState extends State<CodeListsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Übersicht der Code-Listen'),
-      ),
-      bottomNavigationBar: createBottomNavigationBar(context, codelists),
-      body: Column(
-        children: [
-          DataTable(
-            columns: const [
-              DataColumn(label: Text("Name")),
-              DataColumn(label: Text("Beschreibung")),
-              DataColumn(label: Text("Aktionen")),
-            ],
-            rows: codelists.lists
-                .map(
-                  (codelist) => DataRow(
-                    cells: [
-                      DataCell(Text(codelist.definition?.name ?? "")),
-                      DataCell(Text(codelist.definition?.label ?? "")),
-                      DataCell(ElevatedButton.icon(
-                        onPressed: () => onEditButtonPressed(codelist),
-                        icon: const Icon(Icons.edit),
-                        label: const Text("Edit"),
-                      )),
-                    ],
-                  ),
-                )
-                .toList(),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        DataTable(
+          columns: const [
+            DataColumn(label: Text("Name")),
+            DataColumn(label: Text("Beschreibung")),
+            DataColumn(label: Text("Aktionen")),
+          ],
+          rows: codelists.lists
+              .map(
+                (codelist) => DataRow(
+                  cells: [
+                    DataCell(Text(codelist.definition?.name ?? "")),
+                    DataCell(Text(codelist.definition?.label ?? "")),
+                    DataCell(ElevatedButton.icon(
+                      onPressed: () => onEditButtonPressed(codelist),
+                      icon: const Icon(Icons.edit),
+                      label: const Text("Edit"),
+                    )),
+                  ],
+                ),
+              )
+              .toList(),
+        ),
+      ],
     );
   }
 

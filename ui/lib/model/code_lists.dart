@@ -7,6 +7,7 @@ part 'code_lists.g.dart';
 
 @JsonSerializable()
 class CodeLists {
+  @JsonKey(ignore: true)
   final bool newObject;
   final List<CodeList> lists;
   late String id;
@@ -15,7 +16,7 @@ class CodeLists {
     if (id != null) {
       this.id = id;
     } else {
-      this.id = const Uuid().v5(Uuid.NAMESPACE_URL, domain);
+      this.id = const Uuid().v4();
     }
   }
 

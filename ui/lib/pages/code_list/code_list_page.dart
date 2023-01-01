@@ -19,13 +19,13 @@ class CodeListPage extends StatefulWidget {
 class _CodeListPageState extends State<CodeListPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Code-Liste ${widget.codeList.definition?.name}'),
-      ),
-      body: CodeListFormBuilder(
-        model: widget.codeList,
-        builder: (context, formModel, child) => Card(
+    return CodeListFormBuilder(
+      model: widget.codeList,
+      builder: (context, formModel, child) => Scaffold(
+        appBar: AppBar(
+          title: Text('Code-Liste ${formModel.model.definition?.name}'),
+        ),
+        body: Card(
           child: WillPopScope(
             onWillPop: () async => onBack(formModel),
             child: Column(
