@@ -35,6 +35,7 @@ class _CodeListPageState extends State<CodeListPage> {
                   decoration: const InputDecoration(
                     labelText: "Name",
                   ),
+                  onChanged: (control) => setState(() {}),
                 ),
                 ReactiveTextField(
                   formControl: formModel.definitionForm.labelControl,
@@ -42,34 +43,13 @@ class _CodeListPageState extends State<CodeListPage> {
                     labelText: "Label",
                   ),
                 ),
-                ReactiveFormArray(
-                    formArray: formModel.definitionForm.columnsControl,
-                    builder: (context, formArray, child) => DataTable(
-                          columns: const [
-                            DataColumn(label: Text("Spaltenname")),
-                            DataColumn(label: Text("Beschreibung")),
-                          ],
-                          rows: formModel.definitionForm.columnsCodeColumnForm
-                              .map(
-                                (column) => DataRow(
-                                  cells: [
-                                    DataCell(
-                                      ReactiveTextField(
-                                        formControl: column.nameControl,
-                                        decoration: const InputDecoration(),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      ReactiveTextField(
-                                        formControl: column.labelControl,
-                                        decoration: const InputDecoration(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              .toList(),
-                        )),
+                const Divider(),
+                ReactiveCodeListFormConsumer(
+                  builder: (context, formGroup, child) => ElevatedButton(
+                    onPressed: () => gotoDefinition(formGroup),
+                    child: const Text("Definition bearbeiten"),
+                  ),
+                ),
                 const Divider(),
                 ReactiveCodeListFormConsumer(
                   builder: (context, formGroup, child) => ElevatedButton(
@@ -87,7 +67,10 @@ class _CodeListPageState extends State<CodeListPage> {
 
   Future<bool> onBack(CodeListForm codeList) async {
     Navigator.pop(context, codeList.model);
-    return false;
+    if (kDebugMode) {
+      print("Popped out of ListPage");
+    }
+    return true;
   }
 
   void download(FormGroup form) {
@@ -99,12 +82,15 @@ class _CodeListPageState extends State<CodeListPage> {
   gotoData(CodeListForm form) {
     Navigator.pushNamed(context, '/codelistdata', arguments: form).then(
       (map) {
-        final codeListFormMap = map as Map<String, CodeListForm>;
-        if (kDebugMode) {
-          print(codeListFormMap["form"]?.codeList?.data?.rows?.last.value);
-          print((codeListFormMap["form"]?.form.control("data") as FormArray)
-              .rawValue);
-        }
+        setState(() {});
+      },
+    );
+  }
+
+  gotoDefinition(CodeListForm formGroup) {
+    Navigator.pushNamed(context, '/codelistdefinition', arguments: formGroup)
+        .then(
+      (map) {
         setState(() {});
       },
     );

@@ -14,16 +14,18 @@ class CodeListDataPage extends StatefulWidget {
 }
 
 class _CodeListDataPageState extends State<CodeListDataPage> {
+  late CodeListForm codelistForm;
+
   @override
   void initState() {
-    var form = widget.form;
-    if (form.model.definition != null) {
-      form.form.addAll({
-        "data": FormArray(form.model.data?.rows
+    codelistForm = widget.form;
+    if (codelistForm.model.definition != null) {
+      codelistForm.form.addAll({
+        "data": FormArray(codelistForm.model.data?.rows
                 ?.map((row) => FormGroup({
                       ...{"selected": FormControl(value: row.selected)},
                       "value": FormGroup(
-                        Map.fromEntries(form.model.definition?.columns
+                        Map.fromEntries(codelistForm.model.definition?.columns
                                 ?.map((column) => MapEntry(
                                     column.name,
                                     FormControl(
@@ -36,7 +38,7 @@ class _CodeListDataPageState extends State<CodeListDataPage> {
             [])
       });
       if (kDebugMode) {
-        print(form.form.rawValue);
+        print(codelistForm.form.rawValue);
       }
     }
 
@@ -45,77 +47,108 @@ class _CodeListDataPageState extends State<CodeListDataPage> {
 
   @override
   Widget build(BuildContext context) {
-    var form = widget.form;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Code List ${form.model.definition?.label}'),
+        title: Text('Code List ${codelistForm.model.definition?.label}'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: onAddPressed,
+        child: const Icon(Icons.add),
       ),
       body: ReactiveForm(
-        formGroup: form.form,
-        child: Card(
-          child: Column(
-            children: [
-              ReactiveFormArray(
-                  formArrayName: "data",
-                  builder: (context, formArray, child) => DataTable(
-                        columns: form.definitionForm.columnsCodeColumnForm
-                            .map((column) => DataColumn(
-                                  label: Text(column.labelControl.value ?? ""),
-                                ))
-                            .toList(),
-                        rows: (form.form.controls["data"] as FormArray?)
-                                ?.controls
-                                .map((control) => control as FormGroup)
-                                .map(
-                                  (row) => DataRow(
-                                      selected: row.control("selected").value,
-                                      onSelectChanged: (bool? value) {
-                                        setState(() {
-                                          (row.control("selected")
-                                              as FormControl)
-                                            ..updateValue(value)
-                                            ..markAsDirty();
-                                        });
-                                      },
-                                      cells: form
-                                          .definitionForm.columnsCodeColumnForm
-                                          .map(
-                                            (column) => DataCell(
-                                              ReactiveTextField(
-                                                formControl: (row.control(
-                                                        "value") as FormGroup)
-                                                    .control(column.nameControl
-                                                        .value!) as FormControl,
-                                                decoration: InputDecoration(
-                                                    hintText: column
-                                                        .labelControl.value),
-                                              ),
+        formGroup: codelistForm.form,
+        child: WillPopScope(
+          onWillPop: () async => onBack(codelistForm),
+          child: Card(
+            child: Column(
+              children: [
+                ReactiveFormArray(
+                    formArrayName: "data",
+                    builder: (context, formArray, child) => DataTable(
+                          columns: codelistForm
+                              .definitionForm.columnsCodeColumnForm
+                              .map((column) => DataColumn(
+                                    label:
+                                        Text(column.labelControl.value ?? ""),
+                                  ))
+                              .toList(),
+                          rows: (codelistForm.form.controls["data"]
+                                      as FormArray?)
+                                  ?.controls
+                                  .map((control) => control as FormGroup)
+                                  .map(
+                                    (row) => DataRow(
+                                        selected: row.control("selected").value,
+                                        onSelectChanged: (bool? value) {
+                                          setState(() {
+                                            (row.control("selected")
+                                                as FormControl)
+                                              ..updateValue(value)
+                                              ..markAsDirty();
+                                          });
+                                        },
+                                        cells: codelistForm.definitionForm
+                                            .columnsCodeColumnForm
+                                            .map((column) {
+                                          return DataCell(
+                                            placeholder: true,
+                                            ReactiveTextField(
+                                              formControl: (row.control("value")
+                                                      as FormGroup)
+                                                  .control(column.nameControl
+                                                      .value!) as FormControl,
+                                              decoration: InputDecoration(
+                                                  hintText: column
+                                                      .labelControl.value),
                                             ),
-                                          )
-                                          .toList()),
-                                )
-                                .toList() ??
-                            [],
-                      )),
-              const Divider(),
-              ReactiveFormConsumer(
-                builder: (context, formGroup, child) => ElevatedButton(
-                  onPressed: formGroup.dirty ? () => send() : null,
-                  child: const Text("Speichern und zurück"),
+                                            //onTap: () => focusNode.requestFocus(),
+                                          );
+                                        }).toList()),
+                                  )
+                                  .toList() ??
+                              [],
+                        )),
+                const Divider(),
+                ReactiveFormConsumer(
+                  builder: (context, formGroup, child) => ElevatedButton(
+                    onPressed: formGroup.dirty ? () => send() : null,
+                    child: const Text("Speichern und zurück"),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  Future<bool> onBack(CodeListForm codeList) async {
+    if (kDebugMode) {
+      print("Popped out of ListPage");
+    }
+    codelistForm.codeList?.data = CodeData.fromForm(codelistForm);
+    Navigator.pop(context, {'form': codelistForm});
+    return true;
+  }
+
   void send() {
     if (kDebugMode) {
-      print(widget.form.form.rawValue);
+      print(codelistForm.form.rawValue);
     }
-    widget.form.codeList?.data = CodeData.fromForm(widget.form);
-    Navigator.pop(context, {'form': widget.form});
+    codelistForm.codeList?.data = CodeData.fromForm(codelistForm);
+    Navigator.pop(context, {'form': codelistForm});
+  }
+
+  void onAddPressed() {
+    (codelistForm.form.control("data") as FormArray).add(FormGroup({
+      ...{"selected": FormControl(value: false)},
+      "value": FormGroup(
+        Map.fromEntries(codelistForm.model.definition?.columns
+                ?.map((column) => MapEntry(column.name, FormControl()))
+                .toList() ??
+            []),
+      )
+    }));
   }
 }

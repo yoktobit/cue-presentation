@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:test1/controls/medium_divider.dart';
 import 'package:test1/examples/demo_data.dart';
+import 'package:test1/model/code_list.dart';
 import 'package:test1/model/code_lists.dart';
 import 'package:test1/pages/code_list/code_lists_page.dart';
 import 'package:test1/pages/start/navigation_bar.dart';
@@ -39,6 +40,10 @@ class _StartPageState extends State<StartPage> {
           ),
         ],
       ),
+      floatingActionButton: _selectedIndex == 1
+          ? FloatingActionButton(
+              onPressed: onNewCodelist, child: const Icon(Icons.add))
+          : null,
       bottomNavigationBar: codelists != null
           ? BottomNavigationBar(
               items: const [
@@ -129,5 +134,14 @@ class _StartPageState extends State<StartPage> {
         mimeType: MimeType.JSON);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Codelisten im Downloadordner gespeichert")));
+  }
+
+  void onNewCodelist() {
+    final codelist = CodeList.newEmpty();
+    setState(() {
+      codelists?.lists.add(codelist);
+      _selectedIndex = 1;
+    });
+    Navigator.pushNamed(context, '/codelist', arguments: codelist);
   }
 }

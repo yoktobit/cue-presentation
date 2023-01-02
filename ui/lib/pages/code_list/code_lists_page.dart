@@ -60,8 +60,10 @@ class _CodeListsPageState extends State<CodeListsPage> {
     var returnedCodelist =
         await Navigator.pushNamed(context, '/codelist', arguments: codelist)
             as CodeList;
-    var index = codelists.lists.indexWhere(
-        (element) => element.definition?.id == returnedCodelist.definition?.id);
-    codelists.lists.replaceRange(index, index + 1, [returnedCodelist]);
+    setState(() {
+      var index = codelists.lists.indexWhere((element) =>
+          element.definition?.id == returnedCodelist.definition?.id);
+      codelists.lists.replaceRange(index, index + 1, [returnedCodelist]);
+    });
   }
 }

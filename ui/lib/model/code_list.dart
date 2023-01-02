@@ -25,5 +25,11 @@ class CodeList {
     return CodeList.fromJson(codeListForm.form.rawValue);
   }
 
+  factory CodeList.newEmpty() {
+    return CodeList(
+        definition: CodeDefinition(name: "", label: "", columns: []),
+        data: CodeData(rows: []));
+  }
+
   Map<String, dynamic> toJson() => _$CodeListToJson(this);
 }

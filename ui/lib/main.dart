@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:test1/model/code_list.dart';
 import 'package:test1/model/code_lists.dart';
+import 'package:test1/pages/code_list/code_definition_page.dart';
 import 'package:test1/pages/code_list/code_list_page.dart';
 import 'package:test1/pages/code_list/code_list_data_page.dart';
 import 'package:test1/pages/code_list/code_lists_page.dart';
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
             codelists: ModalRoute.of(context)?.settings.arguments as CodeLists),
         '/codelistdata': (context) => CodeListDataPage(
             form: ModalRoute.of(context)?.settings.arguments as CodeListForm),
+        '/codelistdefinition': (context) => CodeDefinitionPage(
+            codeListForm:
+                ModalRoute.of(context)?.settings.arguments as CodeListForm),
         '/sent': (context) => const SentPage(),
         '/': (context) => const StartPage(),
       },
