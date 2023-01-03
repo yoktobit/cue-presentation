@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:cbor/simple.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
@@ -11,7 +13,6 @@ import 'package:test1/examples/demo_data.dart';
 import 'package:test1/model/code_list.dart';
 import 'package:test1/model/code_lists.dart';
 import 'package:test1/pages/code_list/code_lists_page.dart';
-import 'package:test1/pages/start/navigation_bar.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -24,6 +25,8 @@ class _StartPageState extends State<StartPage> {
   CodeLists? codelists;
 
   int _selectedIndex = 0;
+
+  String? cborToken;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +80,9 @@ class _StartPageState extends State<StartPage> {
                     child: const Text("Konfiguration laden...")),
                 const MediumDivider(),
                 ElevatedButton(
-                    onPressed: () => onSavePressed(context),
+                    onPressed: codelists?.id != null
+                        ? () => onSavePressed(context)
+                        : null,
                     child: const Text("Konfiguration speichern")),
                 const MediumDivider(),
                 ElevatedButton(
@@ -90,6 +95,18 @@ class _StartPageState extends State<StartPage> {
                   IconButton(
                       onPressed: () =>
                           Clipboard.setData(ClipboardData(text: codelists?.id)),
+                      icon: const Icon(Icons.copy)),
+                ]),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Expanded(
+                    child: SelectableText(
+                      'CBOR-Token: $cborToken',
+                      maxLines: 10,
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () =>
+                          Clipboard.setData(ClipboardData(text: cborToken)),
                       icon: const Icon(Icons.copy)),
                 ]),
               ],
@@ -129,9 +146,16 @@ class _StartPageState extends State<StartPage> {
   }
 
   void onSavePressed(BuildContext context) {
+    final json = jsonEncode(codelists);
     FileSaver.instance.saveFile(
-        "test", Uint8List.fromList(jsonEncode(codelists).codeUnits), "json",
+        codelists!.id, Uint8List.fromList(json.codeUnits), "json",
         mimeType: MimeType.JSON);
+
+    final gzipped = gzip.encode(cbor.encode(codelists));
+    setState(() {
+      cborToken = base64UrlEncode(gzipped);
+    });
+
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Codelisten im Downloadordner gespeichert")));
   }

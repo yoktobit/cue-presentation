@@ -1,3 +1,4 @@
+import 'package:cbor/cbor.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'code_row.g.dart';
@@ -16,4 +17,11 @@ class CodeRow {
       _$CodeRowFromJson(json);
 
   Map<String, dynamic> toJson() => _$CodeRowToJson(this);
+
+  CborValue toCbor() {
+    return CborValue({
+      "selected": selected,
+      "value": value,
+    });
+  }
 }

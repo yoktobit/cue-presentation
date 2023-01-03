@@ -1,3 +1,4 @@
+import 'package:cbor/cbor.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
 import 'package:test1/model/code_column.dart';
@@ -32,4 +33,13 @@ class CodeDefinition {
       _$CodeDefinitionFromJson(json);
 
   Map<String, dynamic> toJson() => _$CodeDefinitionToJson(this);
+
+  CborValue toCbor() {
+    return CborValue({
+      "name": name,
+      "label": label,
+      "id": id,
+      "columns": CborList(columns?.map((e) => e.toCbor()).toList() ?? []),
+    });
+  }
 }

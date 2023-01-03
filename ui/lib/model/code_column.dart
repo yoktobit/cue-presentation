@@ -1,3 +1,4 @@
+import 'package:cbor/cbor.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
 
@@ -18,4 +19,11 @@ class CodeColumn {
       _$CodeColumnFromJson(json);
 
   Map<String, dynamic> toJson() => _$CodeColumnToJson(this);
+
+  CborValue toCbor() {
+    return CborValue({
+      "name": name,
+      "label": label,
+    });
+  }
 }

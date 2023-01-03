@@ -1,3 +1,4 @@
+import 'package:cbor/cbor.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:test1/model/code_list.dart';
 import 'package:test1/model/globals.dart';
@@ -26,4 +27,11 @@ class CodeLists {
   factory CodeLists.newEmpty() => CodeLists(lists: [], newObject: true);
 
   Map<String, dynamic> toJson() => _$CodeListsToJson(this);
+
+  CborValue toCbor() {
+    return CborValue({
+      "id": id,
+      "lists": CborList(lists.map((e) => e.toCbor()).toList()),
+    });
+  }
 }

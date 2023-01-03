@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:excel/excel.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,13 @@ class _CodeListPageState extends State<CodeListPage> {
                     child: const Text("Daten bearbeiten"),
                   ),
                 ),
+                const Divider(),
+                ReactiveCodeListFormConsumer(
+                  builder: (context, formGroup, child) => ElevatedButton(
+                    onPressed: () => exportData(formGroup),
+                    child: const Text("Daten exportieren"),
+                  ),
+                ),
               ],
             ),
           ),
@@ -94,5 +102,19 @@ class _CodeListPageState extends State<CodeListPage> {
         setState(() {});
       },
     );
+  }
+
+  exportData(CodeListForm formGroup) {
+    final excel = Excel.createExcel();
+    final sheetName = excel.getDefaultSheet() ?? "Sheet 1";
+    excel.appendRow(sheetName,
+        formGroup.model.definition?.columns?.map((e) => e.name).toList() ?? []);
+    formGroup.model.data?.rows?.forEach((element) {
+      excel.appendRow(sheetName, element.value?.values.toList() ?? []);
+    });
+    final excelFile = excel.encode();
+    FileSaver.instance.saveFile(formGroup.model.definition?.id ?? "test",
+        Uint8List.fromList(excelFile!), "xlsx",
+        mimeType: MimeType.MICROSOFTEXCEL);
   }
 }
