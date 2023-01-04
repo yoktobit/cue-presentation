@@ -15,6 +15,7 @@ CodeDefinition _$CodeDefinitionFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       id: json['id'] as String?,
+      isSingleRecord: json['isSingleRecord'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$CodeDefinitionToJson(CodeDefinition instance) =>
@@ -22,5 +23,6 @@ Map<String, dynamic> _$CodeDefinitionToJson(CodeDefinition instance) =>
       'name': instance.name,
       'label': instance.label,
       'id': instance.id,
+      'isSingleRecord': instance.isSingleRecord,
       'columns': instance.columns,
     };

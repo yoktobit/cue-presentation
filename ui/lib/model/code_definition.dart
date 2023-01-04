@@ -13,6 +13,7 @@ class CodeDefinition {
   String name;
   String label;
   late String id;
+  bool isSingleRecord;
 
   List<CodeColumn>? columns;
 
@@ -21,6 +22,7 @@ class CodeDefinition {
     @FormControlAnnotation() required this.label,
     @FormArrayAnnotation() this.columns = const [],
     String? id,
+    @FormControlAnnotation() this.isSingleRecord = false,
   }) {
     if (id != null) {
       this.id = id;

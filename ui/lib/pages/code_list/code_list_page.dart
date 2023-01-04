@@ -45,6 +45,17 @@ class _CodeListPageState extends State<CodeListPage> {
                   ),
                 ),
                 const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ReactiveCheckbox(
+                      formControl:
+                          formModel.definitionForm.isSingleRecordControl,
+                    ),
+                    const Text("Einzeldatensatz"),
+                  ],
+                ),
+                const Divider(),
                 ReactiveCodeListFormConsumer(
                   builder: (context, formGroup, child) => ElevatedButton(
                     onPressed: () => gotoDefinition(formGroup),

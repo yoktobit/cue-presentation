@@ -348,6 +348,8 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
 
   static String columnsControlName = "columns";
 
+  static String isSingleRecordControlName = "isSingleRecord";
+
   final CodeDefinition? codeDefinition;
 
   final FormGroup form;
@@ -358,9 +360,11 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
 
   String nameControlPath() => pathBuilder(nameControlName);
   String labelControlPath() => pathBuilder(labelControlName);
+  String isSingleRecordControlPath() => pathBuilder(isSingleRecordControlName);
   String columnsControlPath() => pathBuilder(columnsControlName);
   String get _nameValue => nameControl.value as String;
   String get _labelValue => labelControl.value as String;
+  bool get _isSingleRecordValue => isSingleRecordControl.value as bool;
   List<CodeColumn>? get _columnsValue => columnsCodeColumnForm
       .asMap()
       .map(
@@ -393,6 +397,15 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
     }
   }
 
+  bool get containsIsSingleRecord {
+    try {
+      form.control(isSingleRecordControlPath());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   bool get containsColumns {
     try {
       form.control(columnsControlPath());
@@ -404,9 +417,11 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
 
   Object? get nameErrors => nameControl.errors;
   Object? get labelErrors => labelControl.errors;
+  Object? get isSingleRecordErrors => isSingleRecordControl.errors;
   Object? get columnsErrors => columnsControl?.errors;
   void get nameFocus => form.focus(nameControlPath());
   void get labelFocus => form.focus(labelControlPath());
+  void get isSingleRecordFocus => form.focus(isSingleRecordControlPath());
   void get columnsFocus => form.focus(columnsControlPath());
   void columnsRemove({
     bool updateParent = true,
@@ -449,6 +464,15 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
     bool emitEvent = true,
   }) {
     labelControl.updateValue(value,
+        updateParent: updateParent, emitEvent: emitEvent);
+  }
+
+  void isSingleRecordValueUpdate(
+    bool value, {
+    bool updateParent = true,
+    bool emitEvent = true,
+  }) {
+    isSingleRecordControl.updateValue(value,
         updateParent: updateParent, emitEvent: emitEvent);
   }
 
@@ -565,6 +589,15 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
         updateParent: updateParent, emitEvent: emitEvent);
   }
 
+  void isSingleRecordValuePatch(
+    bool value, {
+    bool updateParent = true,
+    bool emitEvent = true,
+  }) {
+    isSingleRecordControl.patchValue(value,
+        updateParent: updateParent, emitEvent: emitEvent);
+  }
+
   void columnsValuePatch(
     List<CodeColumn>? value, {
     bool updateParent = true,
@@ -607,6 +640,15 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
   }) =>
       labelControl.reset(
           value: value, updateParent: updateParent, emitEvent: emitEvent);
+  void isSingleRecordValueReset(
+    bool value, {
+    bool updateParent = true,
+    bool emitEvent = true,
+    bool removeFocus = false,
+    bool? disabled,
+  }) =>
+      isSingleRecordControl.reset(
+          value: value, updateParent: updateParent, emitEvent: emitEvent);
   void columnsValueReset(
     List<CodeColumn>? value, {
     bool updateParent = true,
@@ -626,6 +668,8 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
       form.control(nameControlPath()) as FormControl<String>;
   FormControl<String> get labelControl =>
       form.control(labelControlPath()) as FormControl<String>;
+  FormControl<bool> get isSingleRecordControl =>
+      form.control(isSingleRecordControlPath()) as FormControl<bool>;
   FormArray<Map<String, Object?>>? get columnsControl => containsColumns
       ? form.control(columnsControlPath()) as FormArray<Map<String, Object?>>?
       : null;
@@ -659,6 +703,24 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
       );
     } else {
       labelControl.markAsEnabled(
+        updateParent: updateParent,
+        emitEvent: emitEvent,
+      );
+    }
+  }
+
+  void isSingleRecordSetDisabled(
+    bool disabled, {
+    bool updateParent = true,
+    bool emitEvent = true,
+  }) {
+    if (disabled) {
+      isSingleRecordControl.markAsDisabled(
+        updateParent: updateParent,
+        emitEvent: emitEvent,
+      );
+    } else {
+      isSingleRecordControl.markAsEnabled(
         updateParent: updateParent,
         emitEvent: emitEvent,
       );
@@ -724,7 +786,8 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
         name: _nameValue,
         label: _labelValue,
         columns: _columnsValue,
-        id: codeDefinition?.id);
+        id: codeDefinition?.id,
+        isSingleRecord: _isSingleRecordValue);
   }
 
   CodeDefinitionForm copyWithPath(String? path) {
@@ -783,7 +846,14 @@ class CodeDefinitionForm implements FormModel<CodeDefinition> {
             validators: [],
             asyncValidators: [],
             asyncValidatorsDebounceTime: 250,
-            disabled: false)
+            disabled: false),
+        isSingleRecordControlName: FormControl<bool>(
+            value: codeDefinition?.isSingleRecord,
+            validators: [],
+            asyncValidators: [],
+            asyncValidatorsDebounceTime: 250,
+            disabled: false,
+            touched: false)
       },
           validators: [],
           asyncValidators: [],
