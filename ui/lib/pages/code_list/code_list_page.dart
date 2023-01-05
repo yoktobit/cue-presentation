@@ -1,11 +1,15 @@
 import 'dart:convert';
 
 import 'package:excel/excel.dart';
+import 'package:file_picker/src/platform_file.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:test1/model/code_data.dart';
 import 'package:test1/model/code_list.dart';
+import 'package:test1/model/code_row.dart';
 import 'package:test1/pages/start/navigation_bar.dart';
 
 class CodeListPage extends StatefulWidget {
@@ -72,6 +76,13 @@ class _CodeListPageState extends State<CodeListPage> {
                 const Divider(),
                 ReactiveCodeListFormConsumer(
                   builder: (context, formGroup, child) => ElevatedButton(
+                    onPressed: () => importData(formGroup),
+                    child: const Text("Daten importieren"),
+                  ),
+                ),
+                const Divider(),
+                ReactiveCodeListFormConsumer(
+                  builder: (context, formGroup, child) => ElevatedButton(
                     onPressed: () => exportData(formGroup),
                     child: const Text("Daten exportieren"),
                   ),
@@ -115,14 +126,54 @@ class _CodeListPageState extends State<CodeListPage> {
     );
   }
 
+  importData(CodeListForm codeListForm) async {
+    await showMaterialFilePicker(
+        onChanged: (file) => importUploadFinished(file, context, codeListForm));
+  }
+
+  importUploadFinished(
+      PlatformFile file, BuildContext context, CodeListForm codeListForm) {
+    final excelFile = file.bytes!;
+    final excel = Excel.decodeBytes(excelFile);
+    final sheetName = codeListForm.definitionForm.nameControl.value ?? "Sheet1";
+    Map<int, String> headings = {};
+    List<CodeRow> rows = [];
+    for (var row in excel.sheets[sheetName]?.rows ?? []) {
+      Map<String, String> record = {};
+      bool isHeading = false;
+      for (var column in row ?? []) {
+        if ((column as Data).rowIndex == 0) {
+          isHeading = true;
+          headings.addAll(
+              {column.colIndex: (column.value as SharedString).node.innerText});
+        } else {
+          record.addAll({
+            headings[column.colIndex] ?? "col${column.colIndex}":
+                (column.value as SharedString).node.innerText
+          });
+        }
+      }
+      if (!isHeading) {
+        rows.add(CodeRow(value: record));
+      }
+    }
+    setState(() {
+      codeListForm.codeList?.data = CodeData(rows: rows);
+    });
+  }
+
   exportData(CodeListForm formGroup) {
     final excel = Excel.createExcel();
-    final sheetName = excel.getDefaultSheet() ?? "Sheet 1";
+    final oldSheetName = excel.getDefaultSheet();
+    final sheetName = formGroup.definitionForm.nameControl.value ?? "Sheet1";
     excel.appendRow(sheetName,
         formGroup.model.definition?.columns?.map((e) => e.name).toList() ?? []);
     formGroup.model.data?.rows?.forEach((element) {
       excel.appendRow(sheetName, element.value?.values.toList() ?? []);
     });
+    excel.delete(oldSheetName ?? "Sheet1");
+    excel.delete("Sheet1");
+    excel.setDefaultSheet(sheetName);
     final excelFile = excel.encode();
     FileSaver.instance.saveFile(formGroup.model.definition?.id ?? "test",
         Uint8List.fromList(excelFile!), "xlsx",
