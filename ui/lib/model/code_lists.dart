@@ -1,7 +1,6 @@
 import 'package:cbor/cbor.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:test1/model/code_list.dart';
-import 'package:test1/model/globals.dart';
 import 'package:uuid/uuid.dart';
 
 part 'code_lists.g.dart';

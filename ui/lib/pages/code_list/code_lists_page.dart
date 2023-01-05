@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:test1/examples/demo_data.dart';
 import 'package:test1/model/code_list.dart';
 import 'package:test1/model/code_lists.dart';
-import 'package:test1/pages/start/navigation_bar.dart';
 
 class CodeListsPage extends StatefulWidget {
   final CodeLists? codelists;

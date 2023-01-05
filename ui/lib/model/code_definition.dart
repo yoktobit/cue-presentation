@@ -2,7 +2,6 @@ import 'package:cbor/cbor.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
 import 'package:test1/model/code_column.dart';
-import 'package:test1/model/globals.dart';
 import 'package:uuid/uuid.dart';
 
 part 'code_definition.g.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:excel/excel.dart';
-import 'package:file_picker/src/platform_file.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:test1/model/code_data.dart';
 import 'package:test1/model/code_list.dart';
 import 'package:test1/model/code_row.dart';
-import 'package:test1/pages/start/navigation_bar.dart';
 
 class CodeListPage extends StatefulWidget {
   final CodeList codeList;
