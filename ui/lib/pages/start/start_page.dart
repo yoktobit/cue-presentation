@@ -68,48 +68,50 @@ class _StartPageState extends State<StartPage> {
             )
           : null,
       body: _selectedIndex == 0
-          ? Column(
-              children: [
-                const MediumDivider(),
-                ElevatedButton(
-                    onPressed: () => onNewConfigurationPressed(context),
-                    child: const Text("Neue Konfiguration")),
-                const MediumDivider(),
-                ElevatedButton(
-                    onPressed: () => onLoadConfigurationPressed(context),
-                    child: const Text("Konfiguration laden...")),
-                const MediumDivider(),
-                ElevatedButton(
-                    onPressed: codelists?.id != null
-                        ? () => onSavePressed(context)
-                        : null,
-                    child: const Text("Konfiguration speichern")),
-                const MediumDivider(),
-                ElevatedButton(
-                    onPressed: () => onSampleConfigurationPressed(context),
-                    child: const Text("Beispielkonfiguration laden")),
-                const MediumDivider(),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  SelectableText(
-                      'Geladene Konfigurations-ID: ${codelists?.id}'),
-                  IconButton(
-                      onPressed: () =>
-                          Clipboard.setData(ClipboardData(text: codelists?.id)),
-                      icon: const Icon(Icons.copy)),
-                ]),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Expanded(
-                    child: SelectableText(
-                      'CBOR-Token: $cborToken',
-                      maxLines: 10,
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  const MediumDivider(),
+                  ElevatedButton(
+                      onPressed: () => onNewConfigurationPressed(context),
+                      child: const Text("Neue Konfiguration")),
+                  const MediumDivider(),
+                  ElevatedButton(
+                      onPressed: () => onLoadConfigurationPressed(context),
+                      child: const Text("Konfiguration laden...")),
+                  const MediumDivider(),
+                  ElevatedButton(
+                      onPressed: codelists?.id != null
+                          ? () => onSavePressed(context)
+                          : null,
+                      child: const Text("Konfiguration speichern")),
+                  const MediumDivider(),
+                  ElevatedButton(
+                      onPressed: () => onSampleConfigurationPressed(context),
+                      child: const Text("Beispielkonfiguration laden")),
+                  const MediumDivider(),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    SelectableText(
+                        'Geladene Konfigurations-ID: ${codelists?.id}'),
+                    IconButton(
+                        onPressed: () => Clipboard.setData(
+                            ClipboardData(text: codelists?.id)),
+                        icon: const Icon(Icons.copy)),
+                  ]),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Expanded(
+                      child: SelectableText(
+                        'CBOR-Token: $cborToken',
+                        maxLines: 10,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                      onPressed: () =>
-                          Clipboard.setData(ClipboardData(text: cborToken)),
-                      icon: const Icon(Icons.copy)),
-                ]),
-              ],
+                    IconButton(
+                        onPressed: () =>
+                            Clipboard.setData(ClipboardData(text: cborToken)),
+                        icon: const Icon(Icons.copy)),
+                  ]),
+                ],
+              ),
             )
           : CodeListsPage(
               codelists: codelists,
@@ -160,12 +162,12 @@ class _StartPageState extends State<StartPage> {
         content: Text("Codelisten im Downloadordner gespeichert")));
   }
 
-  void onNewCodelist() {
-    final codelist = CodeList.newEmpty();
+  void onNewCodelist() async {
+    final newCodeList = await Navigator.pushNamed(context, '/codelist',
+        arguments: CodeList.newEmpty()) as CodeList;
     setState(() {
-      codelists?.lists.add(codelist);
+      codelists?.lists.add(newCodeList);
       _selectedIndex = 1;
     });
-    Navigator.pushNamed(context, '/codelist', arguments: codelist);
   }
 }

@@ -79,85 +79,92 @@ class _CodeListDataPageState extends State<CodeListDataPage> {
         child: WillPopScope(
           onWillPop: () async => onBack(codelistForm),
           child: Card(
-            child: Column(
-              children: [
-                ReactiveFormArray(
-                    formArrayName: "data",
-                    builder: (context, formArray, child) => (codelistForm
-                                .definitionForm.isSingleRecordControl.value ==
-                            false
-                        ? DataTable(
-                            columns: codelistForm
-                                .definitionForm.columnsCodeColumnForm
-                                .map((column) => DataColumn(
-                                      label:
-                                          Text(column.labelControl.value ?? ""),
-                                    ))
-                                .toList(),
-                            rows: (codelistForm.form.controls["data"]
-                                        as FormArray?)
-                                    ?.controls
-                                    .map((control) => control as FormGroup)
-                                    .map(
-                                      (row) => DataRow(
-                                          selected:
-                                              row.control("selected").value,
-                                          onSelectChanged: (bool? value) {
-                                            setState(() {
-                                              (row.control("selected")
-                                                  as FormControl)
-                                                ..updateValue(value)
-                                                ..markAsDirty();
-                                            });
-                                          },
-                                          cells: codelistForm.definitionForm
-                                              .columnsCodeColumnForm
-                                              .map((column) {
-                                            return DataCell(
-                                              placeholder: true,
-                                              ReactiveTextField(
-                                                formControl: (row.control(
-                                                        "value") as FormGroup)
-                                                    .control(column.nameControl
-                                                        .value!) as FormControl,
-                                                decoration: InputDecoration(
-                                                    hintText: column
-                                                        .labelControl.value),
-                                              ),
-                                              //onTap: () => focusNode.requestFocus(),
-                                            );
-                                          }).toList()),
-                                    )
-                                    .toList() ??
-                                [],
-                          )
-                        : Column(
-                            children: codelistForm
-                                .definitionForm.columnsCodeColumnForm
-                                .map(
-                                  (column) => Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: ReactiveTextField(
-                                      formControl: ((formArray.controls.first
-                                                  as FormGroup)
-                                              .control("value") as FormGroup)
-                                          .control(column.nameControl
-                                              .value!) as FormControl,
-                                      decoration: InputDecoration(
-                                          labelText: column.labelControl.value),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ReactiveFormArray(
+                      formArrayName: "data",
+                      builder: (context, formArray, child) => (codelistForm
+                                  .definitionForm.isSingleRecordControl.value ==
+                              false
+                          ? DataTable(
+                              columns: codelistForm
+                                  .definitionForm.columnsCodeColumnForm
+                                  .map((column) => DataColumn(
+                                        label: Text(
+                                            column.labelControl.value ?? ""),
+                                      ))
+                                  .toList(),
+                              rows: (codelistForm.form.controls["data"]
+                                          as FormArray?)
+                                      ?.controls
+                                      .map((control) => control as FormGroup)
+                                      .map(
+                                        (row) => DataRow(
+                                            selected:
+                                                row.control("selected").value,
+                                            onSelectChanged: (bool? value) {
+                                              setState(() {
+                                                (row.control("selected")
+                                                    as FormControl)
+                                                  ..updateValue(value)
+                                                  ..markAsDirty();
+                                              });
+                                            },
+                                            cells: codelistForm.definitionForm
+                                                .columnsCodeColumnForm
+                                                .map((column) {
+                                              return DataCell(
+                                                placeholder: true,
+                                                ReactiveTextField(
+                                                  autofocus: true,
+                                                  formControl:
+                                                      (row.control("value")
+                                                                  as FormGroup)
+                                                              .control(column
+                                                                  .nameControl
+                                                                  .value!)
+                                                          as FormControl,
+                                                  decoration: InputDecoration(
+                                                      hintText: column
+                                                          .labelControl.value),
+                                                ),
+                                                //onTap: () => focusNode.requestFocus(),
+                                              );
+                                            }).toList()),
+                                      )
+                                      .toList() ??
+                                  [],
+                            )
+                          : Column(
+                              children: codelistForm
+                                  .definitionForm.columnsCodeColumnForm
+                                  .map(
+                                    (column) => Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: ReactiveTextField(
+                                        formControl: ((formArray.controls.first
+                                                    as FormGroup)
+                                                .control("value") as FormGroup)
+                                            .control(column.nameControl
+                                                .value!) as FormControl,
+                                        decoration: InputDecoration(
+                                            labelText:
+                                                column.labelControl.value),
+                                      ),
                                     ),
-                                  ),
-                                )
-                                .toList(),
-                          ))),
-                const Divider(),
-                ReactiveFormConsumer(
-                  builder: (context, formGroup, child) => ElevatedButton(
-                    onPressed: formGroup.dirty ? () => send() : null,
-                    child: const Text("Speichern und zurück"),
+                                  )
+                                  .toList(),
+                            ))),
+                  const Divider(),
+                  ReactiveFormConsumer(
+                    builder: (context, formGroup, child) => ElevatedButton(
+                      onPressed: formGroup.dirty ? () => send() : null,
+                      child: const Text("Speichern und zurück"),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

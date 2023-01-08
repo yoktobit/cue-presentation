@@ -38,31 +38,34 @@ class _CodeDefinitionPageState extends State<CodeDefinitionPage> {
             children: [
               ReactiveFormArray(
                 formArray: codeListForm.definitionForm.columnsControl,
-                builder: (context, formArray, child) => DataTable(
-                  columns: const [
-                    DataColumn(label: Text("Spaltenname")),
-                    DataColumn(label: Text("Beschreibung")),
-                  ],
-                  rows: codeListForm.definitionForm.columnsCodeColumnForm
-                      .map(
-                        (column) => DataRow(
-                          cells: [
-                            DataCell(
-                              ReactiveTextField(
-                                formControl: column.nameControl,
-                                decoration: const InputDecoration(),
+                builder: (context, formArray, child) => SingleChildScrollView(
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text("Spaltenname")),
+                      DataColumn(label: Text("Beschreibung")),
+                    ],
+                    rows: codeListForm.definitionForm.columnsCodeColumnForm
+                        .map(
+                          (column) => DataRow(
+                            cells: [
+                              DataCell(
+                                ReactiveTextField(
+                                  autofocus: true,
+                                  formControl: column.nameControl,
+                                  decoration: const InputDecoration(),
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              ReactiveTextField(
-                                formControl: column.labelControl,
-                                decoration: const InputDecoration(),
+                              DataCell(
+                                ReactiveTextField(
+                                  formControl: column.labelControl,
+                                  decoration: const InputDecoration(),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                      .toList(),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
               const Divider(),

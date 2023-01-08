@@ -36,6 +36,7 @@ class _CodeListPageState extends State<CodeListPage> {
               children: [
                 ReactiveTextField(
                   formControl: formModel.definitionForm.nameControl,
+                  autofocus: true,
                   decoration: const InputDecoration(
                     labelText: "Name",
                   ),
@@ -94,8 +95,8 @@ class _CodeListPageState extends State<CodeListPage> {
     );
   }
 
-  Future<bool> onBack(CodeListForm codeList) async {
-    Navigator.pop(context, codeList.model);
+  Future<bool> onBack(CodeListForm codeListForm) async {
+    Navigator.pop(context, codeListForm.model);
     if (kDebugMode) {
       print("Popped out of ListPage");
     }
